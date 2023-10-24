@@ -2,13 +2,24 @@
 
 import { Button } from "@/app/components/Button";
 import { Input } from "@/app/components/Input/Input";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { AuthSocialButton } from "./AuthSocialButton";
+import AuthSocialButton from "./AuthSocialButton";
 import { BsGithub, BsGoogle } from "react-icons/bs"
 import axios from "axios";
+import toast from "react-hot-toast";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 type Variant = "LOGIN" | "REGISTER"
 export const AuthForm = () => {
+    const session = useSession()
+    const router = useRouter()
+    useEffect(() => {
+        if (session?.status == "authenticated") {
+            router.push('/users')
+        }
+    }, [session?.status, router])
     const [variant, setVariant] = useState<Variant>("LOGIN")
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const toggleVariant = useCallback(() => {
@@ -29,9 +40,28 @@ export const AuthForm = () => {
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         setIsLoading(true)
         if (variant == 'REGISTER') {
-            axios.post('/api/register', data)
+            axios.post('/api/register', data).then((s) => {
+                toast.success("User Regisered!")
+                signIn('credentials', { ...data, redirect: false }).then(() => router.push('/users'))
+            }).catch((e) => toast.error("Something went wrong!"))
+
         }
-        if (variant == 'LOGIN') { }
+        if (variant == 'LOGIN') {
+            signIn('credentials', {
+                ...data,
+                redirect: false
+            }).then((cb) => {
+                if (cb?.error) {
+                    toast.error("Invalid credentials")
+                    return
+                }
+                if (cb?.ok) {
+                    toast.success("Loggedin !")
+                    router.push('/users')
+                    return
+                }
+            })
+        }
     }
 
     return (
@@ -56,18 +86,27 @@ export const AuthForm = () => {
                     </div>
                 </form>
                 <div className="mt-6">
-                    <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-300" />
-                        </div>
-                        <div className="relative flex justify-center text-sm">
-                            <span className="bg-white px-2 text-gray-500 uppercase">
-                                Or contunie with
-                            </span>
+                    <div className="mt-6">
+                        <div className="relative">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-gray-300" />
+                            </div>
+                            <div className="relative flex justify-center text-sm">
+                                <span className="bg-white px-2 text-gray-500">
+                                    Or continue with
+                                </span>
+                            </div>
                         </div>
                         <div className="mt-6 flex gap-2 ">
-                            <AuthSocialButton icon={BsGithub} onClick={function(): void {
-                                throw new Error("Function not implemented.");
+                            <AuthSocialButton icon={BsGithub} onClick={function() {
+                                signIn('github', { redirect: false }).then((cb) => {
+                                    if (cb?.error) {
+                                        toast.error("Invalid Credentials")
+                                        return
+                                    }
+                                    toast.success("Logged in!")
+
+                                })
                             }} />
 
                             <AuthSocialButton icon={BsGoogle} onClick={function(): void {
