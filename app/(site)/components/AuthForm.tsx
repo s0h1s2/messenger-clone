@@ -31,6 +31,7 @@ export const AuthForm = () => {
 
     }, [variant])
     const { register, handleSubmit, formState: { errors } } = useForm<FieldValues>({
+
         defaultValues: {
             name: '',
             email: '',
@@ -38,6 +39,7 @@ export const AuthForm = () => {
         }
     })
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
+
         setIsLoading(true)
         if (variant == 'REGISTER') {
             axios.post('/api/register', data).then((s) => {
@@ -73,12 +75,12 @@ export const AuthForm = () => {
                         <>
                             <Input id="name" label="Name" register={register} required errors={errors} />
                             <Input id="email" label="Email" register={register} required errors={errors} />
-                            <Input id="password" label="Password" register={register} required errors={errors} />
+                            <Input id="password" type="password" label="Password" register={register} required errors={errors} />
                         </>
                     ) : (
                         <div>
                             <Input id="email" label="Email" type="email" register={register} required errors={errors} />
-                            <Input id="password" label="Password" register={register} required errors={errors} />
+                            <Input id="password" type="password" label="Password" register={register} required errors={errors} />
                         </div>
                     )}
                     <div>
