@@ -6,13 +6,13 @@ import { HiArrowLeftOnRectangle } from "react-icons/hi2"
 import { signOut } from "next-auth/react"
 const useRoutes = () => {
   const pathName = usePathname()
-  const { converstionId } = useConverstion()
+  const { conversationId } = useConverstion()
   const routes = useMemo(() => ([
     {
       label: "Chat",
-      href: "/converstions",
+      href: "/conversations",
       icon: HiChat,
-      active: pathName == "/converstions" || !!converstionId
+      active: pathName == "/conversations" || !!conversationId
     },
     {
       label: "Users",
@@ -27,7 +27,7 @@ const useRoutes = () => {
       active: false,
       onClick: () => signOut()
     },
-  ]), [pathName, converstionId])
+  ]), [pathName, conversationId])
   return routes;
 }
 export default useRoutes
