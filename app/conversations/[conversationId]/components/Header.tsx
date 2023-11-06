@@ -1,4 +1,5 @@
 'use client'
+import { Avatar } from '@/app/components/Avatar'
 import useOtherUser from '@/app/hooks/useOtherUser'
 import { Conversation, User } from '@prisma/client'
 import Link from 'next/link'
@@ -23,6 +24,15 @@ export const Header = ({ conversation }: Props) => {
         <Link href="/conversations" className="lg:hidden block text-sky-500 hover:text-sky-600 transition cursor-pointer">
           <HiChevronLeft size={32} />
         </Link>
+        <Avatar user={otherUser} />
+        <div className="flex flex-col">
+          <div className="text-bold">
+            {conversation.name || otherUser.name}
+          </div>
+          <div className="text-sm font-light text-neutral-500">
+            {status}
+          </div>
+        </div>
       </div>
     </div>
   )
