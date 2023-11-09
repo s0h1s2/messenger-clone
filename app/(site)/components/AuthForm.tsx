@@ -51,11 +51,10 @@ export const AuthForm = () => {
         if (variant == 'LOGIN') {
             signIn('credentials', {
                 ...data,
-                redirect: false
+                redirect: false,
             }).then((cb) => {
                 if (cb?.error) {
                     toast.error("Invalid credentials")
-                    return
                 }
                 if (cb?.ok) {
                     toast.success("Loggedin !")
