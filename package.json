@@ -19,7 +19,7 @@
     "date-fns": "^2.30.0",
     "lodash": "^4.17.21",
     "next": "13.5.6",
-    "next-auth": "^4.24.3",
+    "next-auth": "^4.22.1",
     "next-cloudinary": "^5.3.0",
     "next-superjson-plugin": "^0.5.9",
     "pusher": "^5.1.3",
