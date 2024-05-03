@@ -100,7 +100,7 @@ export const AuthForm = () => {
                         </div>
                         <div className="mt-6 flex gap-2 ">
                             <AuthSocialButton icon={BsGithub} onClick={function() {
-                                signIn('github', { redirect: false }).then((cb) => {
+                                signIn('github', { redirect: false,callbackUrl:'/' }).then((cb) => {
                                     if (cb?.error) {
                                         toast.error("Invalid Credentials")
                                         return
